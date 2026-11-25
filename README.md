@@ -1,4 +1,4 @@
-# FraudAuditor – Health Insurance Fraud Detection System
+# FraudAuditor – A Visual Analytics Approach for Collusive Fraud in Health Insurance
 
 A Python-based web application that uses Machine Learning to identify potentially fraudulent health insurance claims and provides visual analytics to support insurance auditing.
 
