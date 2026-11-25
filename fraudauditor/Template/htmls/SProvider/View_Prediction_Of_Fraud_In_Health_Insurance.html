@@ -1,0 +1,178 @@
+{% extends 'SProvider/Header.html' %}
+{% load static %}
+
+{% block title %}Claims & Fraud Predictions | FraudAuditor Admin{% endblock %}
+
+{% block researchblock %}
+<div class="container-fluid p-0">
+    <!-- Page Header -->
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+        <div>
+            <h3 class="fw-bold mb-1">Health Insurance Claims Audit Ledger</h3>
+            <p class="text-muted small mb-0">Complete historical records of audited claims, clinical vitals, and algorithmic fraud predictions</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'Download_Predicted_DataSets' %}" class="btn-saas-secondary btn-sm text-decoration-none">
+                <i class="fa-solid fa-file-excel me-1"></i> Export to Excel
+            </a>
+            <a href="{% url 'View_Prediction_Of_Fraud_In_Health_Insurance_Ratio' %}" class="btn-saas-outline btn-sm text-decoration-none">
+                <i class="fa-solid fa-chart-pie me-1"></i> View Fraud Ratios
+            </a>
+        </div>
+    </div>
+
+    <!-- Quick Stats Summary -->
+    <div class="row g-3 mb-4">
+        <div class="col-sm-6 col-lg-3">
+            <div class="stat-widget">
+                <div class="stat-icon blue">
+                    <i class="fa-solid fa-file-invoice-dollar"></i>
+                </div>
+                <div>
+                    <h4 class="stat-value" id="totalClaimsCount">{{ list_objects|length }}</h4>
+                    <span class="stat-label">Total Claims Audited</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+            <div class="stat-widget">
+                <div class="stat-icon red">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <div>
+                    <h4 class="stat-value text-danger" id="fraudClaimsCount">-</h4>
+                    <span class="stat-label">Fraudulent Claims</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+            <div class="stat-widget">
+                <div class="stat-icon green">
+                    <i class="fa-solid fa-shield-check"></i>
+                </div>
+                <div>
+                    <h4 class="stat-value text-success" id="safeClaimsCount">-</h4>
+                    <span class="stat-label">Verified Legitimate</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+            <div class="stat-widget">
+                <div class="stat-icon teal">
+                    <i class="fa-solid fa-hospital-user"></i>
+                </div>
+                <div>
+                    <h4 class="stat-value">100%</h4>
+                    <span class="stat-label">Audit Ingestion</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table Card -->
+    <div class="saas-card">
+        <div class="saas-card-header flex-wrap gap-2">
+            <div class="d-flex align-items-center gap-2">
+                <h5 class="fw-bold mb-0" style="font-size: 1.05rem;">
+                    <i class="fa-solid fa-stethoscope text-secondary me-2"></i>Audited Insurance Claims
+                </h5>
+                <span class="badge bg-light text-muted border small">{{ list_objects|length }} Records</span>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <div class="input-group input-group-sm" style="max-width: 280px;">
+                    <span class="input-group-text bg-white border-end-0"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+                    <input type="text" id="claimsSearch" class="form-control border-start-0" placeholder="Filter claims..." onkeyup="filterClaimsTable()">
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
+            <table class="table-saas" id="claimsTable">
+                <thead class="sticky-top bg-white">
+                    <tr>
+                        <th>FID</th>
+                        <th>Claim ID</th>
+                        <th>Claim Date</th>
+                        <th>Provider</th>
+                        <th>Attending Physician</th>
+                        <th>Diagnosis</th>
+                        <th>Claimed Sum</th>
+                        <th>Reimbursed</th>
+                        <th>Patient Vitals (Glu/BP/BMI/Age)</th>
+                        <th>Audit Prediction</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for object in list_objects %}
+                    <tr>
+                        <td class="font-monospace fw-bold text-muted small">#{{ object.Fid }}</td>
+                        <td><span class="fw-bold text-primary">{{ object.ClaimID }}</span></td>
+                        <td><span class="small text-muted">{{ object.ClaimDt }}</span></td>
+                        <td><span class="badge bg-light text-dark border">{{ object.Provider }}</span></td>
+                        <td><span class="small text-dark font-monospace">{{ object.AttendingPhysician }}</span></td>
+                        <td><span class="badge bg-primary bg-opacity-10 text-primary">{{ object.ClmDiagnosisCode_1 }}</span></td>
+                        <td><span class="fw-semibold text-dark">${{ object.Claimed_Amount }}</span></td>
+                        <td><span class="small text-muted">${{ object.InscClaimAmtReimbursed }}</span></td>
+                        <td>
+                            <span class="small text-muted font-monospace">
+                                G:{{ object.Glucose }} | BP:{{ object.BloodPressure }} | BMI:{{ object.BMI }} | Age:{{ object.Age }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if object.Prediction == "Fraud Found" %}
+                            <span class="badge-fraud">
+                                <i class="fa-solid fa-triangle-exclamation"></i> Fraud Found
+                            </span>
+                            {% else %}
+                            <span class="badge-safe">
+                                <i class="fa-solid fa-circle-check"></i> No Fraud Found
+                            </span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="10" class="text-center py-5 text-muted">
+                            <i class="fa-solid fa-folder-open fs-3 mb-2 d-block text-secondary"></i>
+                            No claim records found in the database.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+function filterClaimsTable() {
+    const filter = document.getElementById("claimsSearch").value.toUpperCase();
+    const rows = document.getElementById("claimsTable").getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+    for (let i = 0; i < rows.length; i++) {
+        let text = rows[i].textContent || rows[i].innerText;
+        if (text.toUpperCase().indexOf(filter) > -1) {
+            rows[i].style.display = "";
+        } else {
+            rows[i].style.display = "none";
+        }
+    }
+}
+
+// Compute client-side totals from table rows
+document.addEventListener("DOMContentLoaded", function() {
+    const rows = document.getElementById("claimsTable").getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+    let fraudCount = 0;
+    let safeCount = 0;
+    for (let i = 0; i < rows.length; i++) {
+        let text = rows[i].textContent || rows[i].innerText;
+        if (text.indexOf("Fraud Found") > -1) {
+            fraudCount++;
+        } else if (text.indexOf("No Fraud Found") > -1) {
+            safeCount++;
+        }
+    }
+    document.getElementById("fraudClaimsCount").innerText = fraudCount;
+    document.getElementById("safeClaimsCount").innerText = safeCount;
+});
+</script>
+{% endblock %}

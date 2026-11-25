@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block root_content %}
+<!-- Enterprise Public Top Navigation (Red & White Theme) -->
+<nav class="navbar navbar-expand-lg navbar-light sticky-top bg-white" style="border-bottom: 2px solid var(--primary); box-shadow: 0 2px 12px rgba(185, 28, 28, 0.06);">
+    <div class="container-xl">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'index' %}">
+            <div class="brand-logo-icon" style="width: 38px; height: 38px; background: var(--primary);">
+                <i class="fa-solid fa-shield-virus"></i>
+            </div>
+            <div>
+                <span class="brand-text-name" style="color: #111827;">FraudAuditor</span>
+                <span class="brand-sub" style="color: var(--primary);">Healthcare Analytics</span>
+            </div>
+        </a>
+
+        <div class="d-flex align-items-center gap-2 ms-auto">
+            <a href="{% url 'login' %}" class="btn btn-sm px-3 py-2 fw-semibold rounded-pill" style="border: 1.5px solid var(--primary); color: var(--primary); background: #FFFFFF;">
+                <i class="fa-solid fa-user me-1"></i> Remote User Portal
+            </a>
+            <a href="{% url 'serviceproviderlogin' %}" class="btn btn-sm px-3 py-2 fw-semibold rounded-pill text-white shadow-sm" style="background-color: var(--primary); border: 1.5px solid var(--primary);">
+                <i class="fa-solid fa-shield-halved me-1"></i> Service Provider Login
+            </a>
+        </div>
+    </div>
+</nav>
+
+<!-- Page Content Block -->
+{% block public_content %}{% endblock %}
+
+<!-- Enterprise Footer -->
+<footer style="background-color: #18181B; color: #D4D4D8; border-top: 3px solid var(--primary);" class="pt-5 pb-4 mt-auto">
+    <div class="container-xl">
+        <div class="row g-4 mb-4">
+            <div class="col-lg-5">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <div class="brand-logo-icon" style="width: 32px; height: 32px; background: var(--primary);">
+                        <i class="fa-solid fa-shield-virus"></i>
+                    </div>
+                    <span class="brand-text-name text-white">FraudAuditor</span>
+                </div>
+                <p class="small text-secondary mb-3" style="max-width: 420px; line-height: 1.6; color: #A1A1AA !important;">
+                    A Visual Analytics Approach for Collusive Fraud in Health Insurance. Leveraging multi-layer neural networks, graph modeling, and expert-in-the-loop audit workflows to protect healthcare funds.
+                </p>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-25 px-2 py-1 small">
+                        <i class="fa-solid fa-circle fa-2xs me-1"></i> Machine Learning Engine Online
+                    </span>
+                    <span class="badge px-2 py-1 small" style="background: rgba(185, 28, 28, 0.25); color: #FCA5A5; border: 1px solid rgba(248, 113, 113, 0.3);">
+                        IEEE ML 2023 Architecture
+                    </span>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-lg-3 offset-lg-1">
+                <h6 class="text-white text-uppercase font-monospace small mb-3">System Portals</h6>
+                <ul class="list-unstyled small d-flex flex-column gap-2">
+                    <li><a href="{% url 'login' %}" class="text-decoration-none" style="color: #A1A1AA;"><i class="fa-solid fa-chevron-right fa-xs me-2 text-danger"></i>Remote User Login</a></li>
+                    <li><a href="{% url 'Register1' %}" class="text-decoration-none" style="color: #A1A1AA;"><i class="fa-solid fa-chevron-right fa-xs me-2 text-danger"></i>User Registration</a></li>
+                    <li><a href="{% url 'serviceproviderlogin' %}" class="text-decoration-none" style="color: #A1A1AA;"><i class="fa-solid fa-chevron-right fa-xs me-2 text-danger"></i>Service Provider / Admin Login</a></li>
+                    <li><a href="{% url 'index' %}" class="text-decoration-none" style="color: #A1A1AA;"><i class="fa-solid fa-chevron-right fa-xs me-2 text-danger"></i>FraudAuditor Home</a></li>
+                </ul>
+            </div>
+
+            <div class="col-sm-6 col-lg-3">
+                <h6 class="text-white text-uppercase font-monospace small mb-3">Detection Framework</h6>
+                <ul class="list-unstyled small d-flex flex-column gap-2" style="color: #A1A1AA;">
+                    <li><i class="fa-solid fa-check text-danger me-2"></i>Graph Neural Network (MLP)</li>
+                    <li><i class="fa-solid fa-check text-danger me-2"></i>Linear SVM Classifier</li>
+                    <li><i class="fa-solid fa-check text-danger me-2"></i>Multinomial Naive Bayes</li>
+                    <li><i class="fa-solid fa-check text-danger me-2"></i>Ensemble Soft Voting Model</li>
+                </ul>
+            </div>
+        </div>
+
+        <hr style="border-color: rgba(255,255,255,0.1);">
+
+        <div class="d-flex flex-wrap align-items-center justify-content-between small" style="color: #A1A1AA;">
+            <div>
+                &copy; FraudAuditor System. IEEE Transactions on Machine Learning Research Framework.
+            </div>
+            <div class="d-flex gap-3 mt-2 mt-sm-0">
+                <span>All Algorithms &amp; Models Active</span>
+                <span>Django &amp; MySQL Backend</span>
+            </div>
+        </div>
+    </div>
+</footer>
+{% endblock %}

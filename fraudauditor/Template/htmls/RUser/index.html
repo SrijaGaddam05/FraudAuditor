@@ -1,0 +1,85 @@
+{% extends 'public_base.html' %}
+{% load static %}
+
+{% block title %}FraudAuditor | Intelligent Health Insurance Fraud Detection & Analytics{% endblock %}
+
+{% block public_content %}
+<!-- Hero Section: Clean White Background with Red Plus Shield Illustration on Right -->
+<section class="py-5" style="background: linear-gradient(135deg, #FFFFFF 0%, #FFF8F8 65%, #FEF2F2 100%); color: #111827; position: relative; overflow: hidden; min-height: 76vh; display: flex; align-items: center;">
+
+    <div class="container-xl py-lg-4 position-relative">
+        <div class="row align-items-center g-4">
+            <!-- Left Column: Headline, Description, CTAs -->
+            <div class="col-lg-5">
+                <div class="d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill mb-3" style="background: #FEF2F2; border: 1px solid #FECACA;">
+                    <i class="fa-solid fa-shield-virus fa-sm" style="color: var(--primary);"></i>
+                    <span class="small fw-semibold" style="color: var(--primary); letter-spacing: 0.5px; font-size: 0.8rem;">IEEE TRANSACTIONS ON MACHINE LEARNING</span>
+                </div>
+
+                <h1 class="display-4 fw-bold mb-3" style="line-height: 1.15; color: #111827;">
+                    Intelligent Health Insurance <br>
+                    <span style="color: var(--primary);">Fraud Detection</span>
+                </h1>
+
+                <p class="lead mb-4" style="font-size: 1.12rem; line-height: 1.7; max-width: 580px; color: #374151;">
+                    A Visual Analytics Approach for Collusive Fraud in Health Insurance. Safeguarding healthcare funds through co-visit network modeling, biometric vitals cross-referencing, and multi-algorithm machine learning consensus.
+                </p>
+
+                <div class="d-flex flex-wrap gap-3 mb-4">
+                    <a href="{% url 'login' %}" class="btn-saas-primary px-4 py-3 text-white text-decoration-none shadow-sm fs-6" style="border-radius: 999px;">
+                        <i class="fa-solid fa-user-shield me-2"></i> Remote User Portal
+                    </a>
+                    <a href="{% url 'serviceproviderlogin' %}" class="btn px-4 py-3 fw-semibold text-decoration-none shadow-sm fs-6" style="border-radius: 999px; border: 1.5px solid var(--primary); color: var(--primary); background: #FFFFFF;">
+                        <i class="fa-solid fa-chart-line me-2"></i> Service Provider Login
+                    </a>
+                </div>
+
+                <div class="d-flex flex-wrap gap-4 pt-3 border-top small fw-medium" style="border-color: #FECACA !important; color: #374151;">
+                    <div><i class="fa-solid fa-circle-check me-1.5" style="color: var(--primary);"></i> Detect Collusive Fraud</div>
+                    <div><i class="fa-solid fa-circle-check me-1.5" style="color: var(--primary);"></i> Secure Legitimate Claims</div>
+                    <div><i class="fa-solid fa-circle-check me-1.5" style="color: var(--primary);"></i> Better Healthcare Analytics</div>
+                </div>
+            </div>
+
+            <!-- Right Column: Red Plus Shield Illustration -->
+            <div class="col-lg-7 text-center text-lg-end">
+                <img src="{% static 'images/hero-red-shield.png' %}" alt="FraudAuditor Healthcare Shield" class="img-fluid" style="max-width: 720px; width: 100%; height: auto; transform: scale(1.08); transform-origin: center; mix-blend-mode: multiply;">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Research Abstract Overview Section -->
+<section class="py-5" style="background-color: #FAFAFA; border-top: 1px solid #F3F4F6;">
+    <div class="container-xl py-4">
+        <div class="saas-card p-4 p-md-5" style="border-top: 4px solid var(--primary);">
+            <div class="row align-items-center g-4">
+                <div class="col-lg-8">
+                    <span class="badge px-3 py-1.5 rounded-pill fw-semibold text-uppercase font-monospace mb-2" style="font-size: 0.75rem; background: #FEF2F2; color: var(--primary); border: 1px solid #FECACA;">Research Overview</span>
+                    <h3 class="fw-bold mb-3" style="color: #111827;">Visual Analytics &amp; Collusive Fraud Detection</h3>
+                    <p class="text-muted" style="line-height: 1.8;">
+                        Collusive fraud, in which multiple fraudsters collude to defraud health insurance funds, threatens the operation of the healthcare system. However, existing statistical and machine learning-based methods have limited ability to detect fraud in the scenario of health insurance due to the high similarity of fraudulent behaviors to normal medical visits and the lack of labeled data.
+                    </p>
+                    <p class="text-muted mb-0" style="line-height: 1.8;">
+                        To ensure the accuracy of the detection results, expert knowledge needs to be integrated with the fraud detection process. By working closely with health insurance audit experts, <strong>FraudAuditor</strong> provides a three-stage visual analytics approach: interactive co-visit network modeling, suspicious group likelihood detection, and tailored multi-scale visual audit verification.
+                    </p>
+                </div>
+                <div class="col-lg-4">
+                    <div class="p-4 rounded-3 text-center" style="background: #FEF2F2; border: 1px solid #FECACA;">
+                        <div class="stat-icon red mx-auto mb-3" style="width: 52px; height: 52px; font-size: 1.35rem; background: var(--primary); color: #FFFFFF;">
+                            <i class="fa-solid fa-book-medical"></i>
+                        </div>
+                        <h6 class="fw-bold mb-2" style="color: #111827;">IEEE Research Project</h6>
+                        <p class="small text-muted mb-3">Transactions on Machine Learning, Vol. 29, Issue Date: June 2023</p>
+                        <div class="d-flex flex-column gap-2 text-start small" style="color: #374151;">
+                            <div><i class="fa-solid fa-check me-2" style="color: var(--primary);"></i>Multi-Classifier Voting</div>
+                            <div><i class="fa-solid fa-check me-2" style="color: var(--primary);"></i>Automated Risk Scoring</div>
+                            <div><i class="fa-solid fa-check me-2" style="color: var(--primary);"></i>Visual Ratio Analytics</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

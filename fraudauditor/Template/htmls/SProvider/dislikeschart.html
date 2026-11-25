@@ -1,0 +1,63 @@
+{% extends 'SProvider/Header.html' %}
+{% load static %}
+
+{% block title %}Model Evaluation Chart | FraudAuditor Admin{% endblock %}
+
+{% block researchblock %}
+<div class="container-fluid p-0">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+        <div>
+            <h3 class="fw-bold mb-1">Algorithmic Performance Chart</h3>
+            <p class="text-muted small mb-0">Model evaluation curves and metric distributions</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'likeschart' 'bar' %}" class="btn-saas-secondary btn-sm text-decoration-none">
+                <i class="fa-solid fa-chart-column me-1"></i> View Bar Chart
+            </a>
+            <a href="{% url 'charts1' 'line' %}" class="btn-saas-outline btn-sm text-decoration-none">
+                <i class="fa-solid fa-chart-line me-1"></i> View Line Chart
+            </a>
+        </div>
+    </div>
+
+    <div class="saas-card mb-4">
+        <div class="saas-card-header">
+            <h5 class="fw-bold mb-0">Distribution Curve</h5>
+            <span class="badge bg-primary bg-opacity-10 text-primary border small">Analytics View</span>
+        </div>
+        <div class="saas-card-body p-4">
+            <div id="chartContainer" style="height: 380px; width: 100%;"></div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+<script>
+window.onload = function() {
+    var chart = new CanvasJS.Chart("chartContainer", {
+        theme: "light2",
+        animationEnabled: true,
+        backgroundColor: "#FFFFFF",
+        title: {
+            text: "Model Evaluation Performance",
+            fontFamily: "Inter, sans-serif",
+            fontSize: 16,
+            fontWeight: "600",
+            fontColor: "#B91C1C",
+            padding: 10
+        },
+        data: [{
+            type: "column",
+            color: "#DC2626",
+            yValueFormatString: "##0.00\"%\"",
+            dataPoints: [
+                {% for o in form %}
+                { y: {{ o.dcount }}, label: "{{ o.names }}" },
+                {% endfor %}
+            ]
+        }]
+    });
+    chart.render();
+}
+</script>
+{% endblock %}

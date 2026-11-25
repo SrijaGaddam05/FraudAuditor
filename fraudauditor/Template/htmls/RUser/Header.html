@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}User Portal | FraudAuditor{% endblock %}
+
+{% block extra_css %}
+<style>
+    .app-main {
+        background: linear-gradient(180deg, #FFFFFF 0%, #FFF8F8 100%);
+    }
+</style>
+{% endblock %}
+
+{% block root_content %}
+<div class="app-shell">
+    <!-- User Portal Sidebar -->
+    <aside class="app-sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-logo-icon">
+                <i class="fa-solid fa-user-shield"></i>
+            </div>
+            <div>
+                <h5 class="brand-text-name">FraudAuditor</h5>
+                <span class="brand-sub">User Portal</span>
+            </div>
+        </div>
+
+        <div class="sidebar-nav">
+            <div class="sidebar-section-title">Claim Services</div>
+            <a href="{% url 'Predict_Fraud_In_Health_Insurance' %}" class="sidebar-link {% if request.path == '/Predict_Fraud_In_Health_Insurance/' %}active{% endif %}">
+                <i class="fa-solid fa-stethoscope"></i>
+                <span>Predict Claim Fraud</span>
+            </a>
+
+            <div class="sidebar-section-title">Account & Settings</div>
+            <a href="{% url 'ViewYourProfile' %}" class="sidebar-link {% if request.path == '/ViewYourProfile/' %}active{% endif %}">
+                <i class="fa-solid fa-id-card"></i>
+                <span>My Profile</span>
+            </a>
+
+            <div class="sidebar-section-title">Session</div>
+            <a href="{% url 'index' %}" class="sidebar-link text-danger-hover">
+                <i class="fa-solid fa-arrow-right-from-bracket text-danger"></i>
+                <span class="text-danger">Log Out</span>
+            </a>
+        </div>
+
+        <div class="sidebar-footer">
+            <div class="d-flex align-items-center gap-2">
+                <div class="stat-icon red" style="width: 32px; height: 32px; font-size: 0.9rem;">
+                    <i class="fa-solid fa-user-check"></i>
+                </div>
+                <div>
+                    <div class="text-dark small fw-semibold">Member Session</div>
+                    <div class="text-muted" style="font-size: 0.725rem;">Active &amp; Authenticated</div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="app-main">
+        <!-- Topbar -->
+        <header class="app-topbar shadow-sm">
+            <div class="d-flex align-items-center gap-3">
+                <button class="btn btn-sm btn-outline-secondary d-lg-none" type="button" onclick="document.querySelector('.app-sidebar').classList.toggle('show')">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 px-2.5 py-1 small">
+                        Policyholder / Member
+                    </span>
+                    <span class="text-muted small d-none d-sm-inline">Health Insurance Auditing & Claim Vetting</span>
+                </div>
+            </div>
+
+            <div class="d-flex align-items-center gap-3">
+                <a href="{% url 'Predict_Fraud_In_Health_Insurance' %}" class="btn-saas-secondary btn-sm px-3 py-1.5 text-decoration-none d-none d-sm-inline-flex shadow-sm">
+                    <i class="fa-solid fa-plus me-1"></i> New Claim Check
+                </a>
+                <a href="{% url 'index' %}" class="btn btn-sm btn-outline-danger px-2.5 py-1 text-decoration-none" title="Log Out">
+                    <i class="fa-solid fa-power-off"></i>
+                </a>
+            </div>
+        </header>
+
+        <!-- Page Sub-block -->
+        <main class="app-content">
+            {% block userblock %}
+            {% endblock %}
+        </main>
+    </div>
+</div>
+{% endblock %}

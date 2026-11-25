@@ -1,0 +1,60 @@
+{% extends 'public_base.html' %}
+{% load static %}
+
+{% block title %}Remote User Login | FraudAuditor{% endblock %}
+
+{% block public_content %}
+<div class="auth-bg-overlay" style="background: linear-gradient(135deg, #FFFFFF 0%, #FFF5F5 55%, #FEE2E2 100%);">
+    <div class="container-xl">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-5">
+                <div class="text-center mb-4">
+                    <div class="d-inline-flex align-items-center justify-content-center brand-logo-icon mb-3 shadow-lg" style="width: 52px; height: 52px; font-size: 1.6rem;">
+                        <i class="fa-solid fa-user-shield"></i>
+                    </div>
+                    <h2 class="fw-bold mb-1" style="color: #111827;">Remote User Portal</h2>
+                    <p class="text-muted small">Sign in to submit claims and perform automated fraud auditing</p>
+                </div>
+
+                <!-- Translucent Glassmorphism Card -->
+                <div class="glass-card p-4 p-sm-5">
+                    <form method="POST" role="form">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label class="form-label" for="username">
+                                <i class="fa-solid fa-user me-1 text-muted"></i> Username
+                            </label>
+                            <input type="text" id="username" name="username" class="form-control" placeholder="Enter your registered username" required autofocus>
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="form-label" for="password">
+                                    <i class="fa-solid fa-lock me-1 text-muted"></i> Password
+                                </label>
+                            </div>
+                            <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password" required>
+                        </div>
+
+                        <button type="submit" name="submit1" class="btn-saas-primary w-100 py-2.5 mb-3 shadow-sm">
+                            <i class="fa-solid fa-arrow-right-to-bracket me-1"></i> Sign In to Account
+                        </button>
+
+                        <div class="text-center pt-3 border-top border-light">
+                            <span class="text-muted small">Don't have an account?</span>
+                            <a href="{% url 'Register1' %}" class="fw-semibold ms-1 small">Register New Account</a>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="text-center mt-4">
+                    <a href="{% url 'serviceproviderlogin' %}" class="badge bg-dark bg-opacity-50 text-white border border-light border-opacity-25 px-3 py-2 rounded-pill small text-decoration-none shadow-sm hover-text-white">
+                        <i class="fa-solid fa-shield-halved me-1 text-accent"></i> Are you an Auditor? <strong>Switch to Service Provider Login</strong>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

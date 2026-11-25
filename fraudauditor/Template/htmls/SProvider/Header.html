@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Service Provider Admin Dashboard | FraudAuditor{% endblock %}
+
+{% block extra_css %}
+<style>
+    .app-main {
+        background: linear-gradient(180deg, #FFFFFF 0%, #FFF8F8 100%);
+    }
+</style>
+{% endblock %}
+
+{% block root_content %}
+<div class="app-shell">
+    <!-- Admin / Service Provider Sidebar -->
+    <aside class="app-sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-logo-icon" style="background: linear-gradient(135deg, var(--primary), var(--secondary));">
+                <i class="fa-solid fa-chart-line"></i>
+            </div>
+            <div>
+                <h5 class="brand-text-name">FraudAuditor</h5>
+                <span class="brand-sub" style="color: var(--primary);">Auditor Analytics</span>
+            </div>
+        </div>
+
+        <div class="sidebar-nav">
+            <div class="sidebar-section-title">Core Management</div>
+            <a href="{% url 'View_Remote_Users' %}" class="sidebar-link {% if request.path == '/View_Remote_Users/' %}active{% endif %}">
+                <i class="fa-solid fa-users"></i>
+                <span>Registered Users</span>
+            </a>
+
+            <div class="sidebar-section-title">Machine Learning Engine</div>
+            <a href="{% url 'train_model' %}" class="sidebar-link {% if request.path == '/train_model/' %}active{% endif %}">
+                <i class="fa-solid fa-microchip"></i>
+                <span>Train ML Models</span>
+            </a>
+            <a href="{% url 'likeschart' 'bar' %}" class="sidebar-link {% if 'likeschart' in request.path %}active{% endif %}">
+                <i class="fa-solid fa-chart-simple"></i>
+                <span>Accuracy Bar Chart</span>
+            </a>
+            <a href="{% url 'charts1' 'line' %}" class="sidebar-link {% if 'charts1' in request.path %}active{% endif %}">
+                <i class="fa-solid fa-chart-area"></i>
+                <span>Model Accuracy Results</span>
+            </a>
+
+            <div class="sidebar-section-title">Claims & Visual Audit</div>
+            <a href="{% url 'View_Prediction_Of_Fraud_In_Health_Insurance' %}" class="sidebar-link {% if request.path == '/View_Prediction_Of_Fraud_In_Health_Insurance/' %}active{% endif %}">
+                <i class="fa-solid fa-table-list"></i>
+                <span>Claims & Predictions</span>
+            </a>
+            <a href="{% url 'View_Prediction_Of_Fraud_In_Health_Insurance_Ratio' %}" class="sidebar-link {% if request.path == '/View_Prediction_Of_Fraud_In_Health_Insurance_Ratio/' %}active{% endif %}">
+                <i class="fa-solid fa-percent"></i>
+                <span>Fraud Prediction Ratio</span>
+            </a>
+            <a href="{% url 'charts' 'line' %}" class="sidebar-link {% if 'charts/' in request.path %}active{% endif %}">
+                <i class="fa-solid fa-chart-pie"></i>
+                <span>Fraud Ratio Visuals</span>
+            </a>
+
+            <div class="sidebar-section-title">Data Exports</div>
+            <a href="{% url 'Download_Predicted_DataSets' %}" class="sidebar-link {% if request.path == '/Download_Predicted_DataSets/' %}active{% endif %}">
+                <i class="fa-solid fa-file-excel"></i>
+                <span>Download Datasets</span>
+            </a>
+
+            <div class="sidebar-section-title">Session</div>
+            <a href="{% url 'index' %}" class="sidebar-link">
+                <i class="fa-solid fa-arrow-right-from-bracket text-danger"></i>
+                <span class="text-danger">Admin Logout</span>
+            </a>
+        </div>
+
+        <div class="sidebar-footer">
+            <div class="d-flex align-items-center gap-2">
+                <div class="stat-icon red" style="width: 32px; height: 32px; font-size: 0.9rem;">
+                    <i class="fa-solid fa-user-gear"></i>
+                </div>
+                <div>
+                    <div class="text-dark small fw-semibold">Administrator</div>
+                    <div class="text-muted" style="font-size: 0.725rem;">Super-Auditor Privileges</div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content Shell -->
+    <div class="app-main">
+        <!-- Topbar -->
+        <header class="app-topbar shadow-sm">
+            <div class="d-flex align-items-center gap-3">
+                <button class="btn btn-sm btn-outline-secondary d-lg-none" type="button" onclick="document.querySelector('.app-sidebar').classList.toggle('show')">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 px-2.5 py-1 small">
+                        Enterprise Auditor Console
+                    </span>
+                    <span class="text-muted small d-none d-md-inline">Health Insurance Collusive Fraud Analytics</span>
+                </div>
+            </div>
+
+            <div class="d-flex align-items-center gap-2">
+                <a href="{% url 'train_model' %}" class="btn-saas-outline btn-sm px-3 py-1.5 text-decoration-none d-none d-sm-inline-flex">
+                    <i class="fa-solid fa-arrows-rotate me-1"></i> Re-Train Models
+                </a>
+                <a href="{% url 'Download_Predicted_DataSets' %}" class="btn-saas-secondary btn-sm px-3 py-1.5 text-decoration-none d-none d-sm-inline-flex shadow-sm">
+                    <i class="fa-solid fa-download me-1"></i> Export Excel
+                </a>
+                <a href="{% url 'index' %}" class="btn btn-sm btn-outline-danger px-2.5 py-1 text-decoration-none" title="Log Out">
+                    <i class="fa-solid fa-power-off"></i>
+                </a>
+            </div>
+        </header>
+
+        <!-- Page Sub-block -->
+        <main class="app-content">
+            {% block researchblock %}
+            {% endblock %}
+        </main>
+    </div>
+</div>
+{% endblock %}

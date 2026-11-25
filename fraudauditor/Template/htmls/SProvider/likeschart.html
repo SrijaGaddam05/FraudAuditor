@@ -1,0 +1,142 @@
+{% extends 'SProvider/Header.html' %}
+{% load static %}
+
+{% block title %}Trained Accuracy Bar Chart | FraudAuditor Admin{% endblock %}
+
+{% block researchblock %}
+<div class="container-fluid p-0">
+    <!-- Header -->
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+        <div>
+            <h3 class="fw-bold mb-1">Model Accuracy Comparison Bar Chart</h3>
+            <p class="text-muted small mb-0">Comparative column visualization of trained fraud detection algorithms</p>
+        </div>
+        <div class="d-flex align-items-center gap-1 bg-white p-1 rounded-3 border shadow-sm">
+            <span class="small text-muted px-2 fw-semibold">Navigation:</span>
+            <a href="{% url 'likeschart' 'bar' %}" class="btn btn-sm btn-primary rounded-2">
+                <i class="fa-solid fa-chart-column me-1"></i> Bar Chart
+            </a>
+            <a href="{% url 'charts1' 'line' %}" class="btn btn-sm btn-light text-muted rounded-2">
+                <i class="fa-solid fa-chart-line me-1"></i> Line Chart
+            </a>
+            <a href="{% url 'charts1' 'pie' %}" class="btn btn-sm btn-light text-muted rounded-2">
+                <i class="fa-solid fa-chart-pie me-1"></i> Pie Chart
+            </a>
+        </div>
+    </div>
+
+    <!-- Chart Visualization Card -->
+    <div class="saas-card mb-4">
+        <div class="saas-card-header">
+            <div class="d-flex align-items-center gap-2">
+                <div class="stat-icon blue" style="width: 34px; height: 34px; font-size: 0.95rem;">
+                    <i class="fa-solid fa-chart-column"></i>
+                </div>
+                <div>
+                    <h5 class="fw-bold mb-0" style="font-size: 1.05rem;">Accuracy Benchmark Columns</h5>
+                    <span class="text-muted" style="font-size: 0.775rem;">Direct comparative analysis across model architectures</span>
+                </div>
+            </div>
+            <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 small">
+                Trained Models Bar Chart
+            </span>
+        </div>
+
+        <div class="saas-card-body p-4">
+            <div id="chartContainer" style="height: 380px; width: 100%;"></div>
+        </div>
+    </div>
+
+    <!-- Numerical Data Table Card -->
+    <div class="saas-card">
+        <div class="saas-card-header">
+            <h5 class="fw-bold mb-0" style="font-size: 1.05rem;">
+                <i class="fa-solid fa-award text-secondary me-2"></i>Performance Scorecard
+            </h5>
+            <span class="badge bg-light text-muted border small">Normalized Scores</span>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table-saas">
+                <thead>
+                    <tr>
+                        <th>Algorithm Name</th>
+                        <th>Accuracy Benchmark</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for o in form %}
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="fa-solid fa-microchip text-secondary"></i>
+                                <span class="fw-bold text-dark">{{ o.names }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="progress flex-grow-1" style="height: 8px; max-width: 200px; background: #E2E8F0;">
+                                    <div class="progress-bar bg-primary" style="width: {{ o.dcount }}%;"></div>
+                                </div>
+                                <span class="fw-bold font-monospace fs-6">{{ o.dcount|floatformat:2 }}%</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge-safe">
+                                <i class="fa-solid fa-check"></i> Benchmark Logged
+                            </span>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3" class="text-center py-4 text-muted">No algorithm data recorded.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+<script>
+window.onload = function() {
+    var chart = new CanvasJS.Chart("chartContainer", {
+        theme: "light2",
+        animationEnabled: true,
+        backgroundColor: "#FFFFFF",
+        title: {
+            text: "Model Accuracy Benchmark (Bar Chart)",
+            fontFamily: "Inter, sans-serif",
+            fontSize: 16,
+            fontWeight: "600",
+            fontColor: "#B91C1C",
+            padding: 10
+        },
+        axisY: {
+            title: "Accuracy (%)",
+            suffix: "%",
+            maximum: 105,
+            gridColor: "#FEF2F2",
+            lineColor: "#E5E7EB"
+        },
+        data: [{
+            type: "column",
+            color: "#DC2626",
+            yValueFormatString: "##0.00\"%\"",
+            indexLabel: "{y}",
+            indexLabelFontFamily: "Inter, sans-serif",
+            indexLabelFontWeight: "600",
+            indexLabelPlacement: "outside",
+            dataPoints: [
+                {% for o in form %}
+                { y: {{ o.dcount }}, label: "{{ o.names }}" },
+                {% endfor %}
+            ]
+        }]
+    });
+    chart.render();
+}
+</script>
+{% endblock %}

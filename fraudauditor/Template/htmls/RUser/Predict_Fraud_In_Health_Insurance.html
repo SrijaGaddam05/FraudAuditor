@@ -1,0 +1,251 @@
+{% extends 'RUser/Header.html' %}
+{% load static %}
+
+{% block title %}Predict Fraud in Health Insurance | FraudAuditor{% endblock %}
+
+{% block userblock %}
+<div class="container-fluid p-0">
+    <!-- Page Title & Actions -->
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+        <div>
+            <h3 class="fw-bold mb-1">Health Insurance Fraud Predictor</h3>
+            <p class="text-muted small mb-0">Evaluate health insurance claim parameters against our multi-model ML ensemble</p>
+        </div>
+        <div class="d-flex gap-2">
+            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="fillDemoData('safe')">
+                <i class="fa-solid fa-wand-magic-sparkles me-1 text-success"></i> Sample Valid Claim
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="fillDemoData('fraud')">
+                <i class="fa-solid fa-wand-magic-sparkles me-1 text-danger"></i> Sample Suspicious Claim
+            </button>
+        </div>
+    </div>
+
+    <!-- Prediction Result Banner if Available -->
+    {% if objs %}
+    <div class="mb-4">
+        {% if objs == "Fraud Found" %}
+        <div class="saas-card border-danger shadow-sm p-4" style="background: linear-gradient(135deg, #FEF2F2 0%, #FFFFFF 100%); border-left: 6px solid var(--danger) !important;">
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="stat-icon red" style="width: 56px; height: 56px; font-size: 1.75rem;">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+                    <div>
+                        <span class="badge-fraud mb-1">High Risk Detected</span>
+                        <h4 class="fw-bold text-danger mb-1">{{ objs }}</h4>
+                        <p class="text-muted small mb-0">The ensemble classification pipeline flagged this claim as showing high correlation with collusive fraud patterns.</p>
+                    </div>
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="{% url 'Predict_Fraud_In_Health_Insurance' %}" class="btn-saas-outline btn-sm">
+                        <i class="fa-solid fa-rotate-left me-1"></i> Audit Another Claim
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="saas-card border-success shadow-sm p-4" style="background: linear-gradient(135deg, #F0FDF4 0%, #FFFFFF 100%); border-left: 6px solid var(--success) !important;">
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="stat-icon green" style="width: 56px; height: 56px; font-size: 1.75rem;">
+                        <i class="fa-solid fa-shield-check"></i>
+                    </div>
+                    <div>
+                        <span class="badge-safe mb-1">Verification Passed</span>
+                        <h4 class="fw-bold text-success mb-1">{{ objs }}</h4>
+                        <p class="text-muted small mb-0">The claim metrics fall within normal medical billing variance. No collusive anomaly patterns were detected.</p>
+                    </div>
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="{% url 'Predict_Fraud_In_Health_Insurance' %}" class="btn-saas-outline btn-sm">
+                        <i class="fa-solid fa-rotate-left me-1"></i> Audit Another Claim
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Prediction Form -->
+    <div class="saas-card">
+        <div class="saas-card-header">
+            <div class="d-flex align-items-center gap-2">
+                <div class="stat-icon blue" style="width: 34px; height: 34px; font-size: 0.95rem;">
+                    <i class="fa-solid fa-file-medical"></i>
+                </div>
+                <div>
+                    <h5 class="fw-bold mb-0" style="font-size: 1.05rem;">Claim & Patient Audit Details</h5>
+                    <span class="text-muted" style="font-size: 0.775rem;">All fields are processed by the vectorization and ensemble classifier</span>
+                </div>
+            </div>
+            <span class="badge bg-light text-muted border small">Multi-Parameter Form</span>
+        </div>
+
+        <div class="saas-card-body p-4 p-md-5">
+            <form role="form" method="POST" id="fraudForm">
+                {% csrf_token %}
+
+                <!-- Section 1: Claim Information -->
+                <div class="mb-4">
+                    <div class="d-flex align-items-center gap-2 mb-3 pb-2 border-bottom">
+                        <span class="badge bg-primary bg-opacity-10 text-primary rounded-circle" style="width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.75rem;">1</span>
+                        <h6 class="fw-bold mb-0 text-uppercase font-monospace small text-primary">Claim Identification</h6>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label" for="Fid">FID (Feature/Record ID) <span class="text-danger">*</span></label>
+                            <input type="text" id="Fid" name="Fid" class="form-control" placeholder="e.g. 1, 2, 3..." required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label" for="ClaimID">Claim ID <span class="text-danger">*</span></label>
+                            <input type="text" id="ClaimID" name="ClaimID" class="form-control" placeholder="e.g. CLM66086" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label" for="ClaimDt">Claim Date <span class="text-danger">*</span></label>
+                            <input type="text" id="ClaimDt" name="ClaimDt" class="form-control" placeholder="e.g. 2023-07-21" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 2: Provider & Physician Details -->
+                <div class="mb-4">
+                    <div class="d-flex align-items-center gap-2 mb-3 pb-2 border-bottom">
+                        <span class="badge bg-primary bg-opacity-10 text-primary rounded-circle" style="width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.75rem;">2</span>
+                        <h6 class="fw-bold mb-0 text-uppercase font-monospace small text-primary">Healthcare Provider & Physician</h6>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label" for="Provider">Provider Code / Hospital <span class="text-danger">*</span></label>
+                            <input type="text" id="Provider" name="Provider" class="form-control" placeholder="e.g. PRV51001" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="AttendingPhysician">Attending Physician ID <span class="text-danger">*</span></label>
+                            <input type="text" id="AttendingPhysician" name="AttendingPhysician" class="form-control" placeholder="e.g. PHY330744" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 3: Financial & Diagnosis Information -->
+                <div class="mb-4">
+                    <div class="d-flex align-items-center gap-2 mb-3 pb-2 border-bottom">
+                        <span class="badge bg-primary bg-opacity-10 text-primary rounded-circle" style="width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.75rem;">3</span>
+                        <h6 class="fw-bold mb-0 text-uppercase font-monospace small text-primary">Financial & Diagnostic Codes</h6>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <label class="form-label" for="Sum_Insured">Sum Insured <span class="text-danger">*</span></label>
+                            <input type="text" id="Sum_Insured" name="Sum_Insured" class="form-control" placeholder="e.g. 50000" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label" for="InscClaimAmtReimbursed">Reimbursed Amount <span class="text-danger">*</span></label>
+                            <input type="text" id="InscClaimAmtReimbursed" name="InscClaimAmtReimbursed" class="form-control" placeholder="e.g. 5000" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label" for="Claimed_Amount">Claimed Amount <span class="text-danger">*</span></label>
+                            <input type="text" id="Claimed_Amount" name="Claimed_Amount" class="form-control" placeholder="e.g. 5000" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label" for="ClmDiagnosisCode_1">Primary Diagnosis Code <span class="text-danger">*</span></label>
+                            <input type="text" id="ClmDiagnosisCode_1" name="ClmDiagnosisCode_1" class="form-control" placeholder="e.g. 78605" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 4: Patient Biometrics & Health Vitals -->
+                <div class="mb-4">
+                    <div class="d-flex align-items-center gap-2 mb-3 pb-2 border-bottom">
+                        <span class="badge bg-primary bg-opacity-10 text-primary rounded-circle" style="width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.75rem;">4</span>
+                        <h6 class="fw-bold mb-0 text-uppercase font-monospace small text-primary">Patient Health Vitals & Demographics</h6>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <label class="form-label" for="Glucose">Glucose (mg/dL)</label>
+                            <input type="text" id="Glucose" name="Glucose" class="form-control" placeholder="e.g. 148">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label" for="BloodPressure">Blood Pressure (mm Hg)</label>
+                            <input type="text" id="BloodPressure" name="BloodPressure" class="form-control" placeholder="e.g. 72">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label" for="SkinThickness">Skin Thickness (mm)</label>
+                            <input type="text" id="SkinThickness" name="SkinThickness" class="form-control" placeholder="e.g. 35">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label" for="Insulin">Insulin Level</label>
+                            <input type="text" id="Insulin" name="Insulin" class="form-control" placeholder="e.g. 0">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label" for="BMI">BMI (Body Mass Index)</label>
+                            <input type="text" id="BMI" name="BMI" class="form-control" placeholder="e.g. 33.6">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label" for="DiabetesPedigreeFunction">Diabetes Pedigree</label>
+                            <input type="text" id="DiabetesPedigreeFunction" name="DiabetesPedigreeFunction" class="form-control" placeholder="e.g. 0.627">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label" for="Age">Patient Age</label>
+                            <input type="text" id="Age" name="Age" class="form-control" placeholder="e.g. 50">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Controls -->
+                <div class="d-flex flex-wrap gap-3 align-items-center justify-content-between pt-4 border-top">
+                    <button type="reset" class="btn-saas-outline">
+                        <i class="fa-solid fa-rotate me-1"></i> Clear Form
+                    </button>
+                    <button type="submit" name="submit" value="Predict" class="btn-saas-secondary px-5 py-2.5">
+                        <i class="fa-solid fa-microchip me-2"></i> Run AI Fraud Prediction
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function fillDemoData(type) {
+    if (type === 'safe') {
+        document.getElementById('Fid').value = '101';
+        document.getElementById('ClaimID').value = 'CLM77012';
+        document.getElementById('ClaimDt').value = '2023-08-14';
+        document.getElementById('Provider').value = 'PRV52011';
+        document.getElementById('Sum_Insured').value = '100000';
+        document.getElementById('InscClaimAmtReimbursed').value = '4200';
+        document.getElementById('AttendingPhysician').value = 'PHY410293';
+        document.getElementById('ClmDiagnosisCode_1').value = '4019';
+        document.getElementById('Claimed_Amount').value = '4200';
+        document.getElementById('Glucose').value = '110';
+        document.getElementById('BloodPressure').value = '80';
+        document.getElementById('SkinThickness').value = '28';
+        document.getElementById('Insulin').value = '75';
+        document.getElementById('BMI').value = '26.4';
+        document.getElementById('DiabetesPedigreeFunction').value = '0.351';
+        document.getElementById('Age').value = '42';
+    } else {
+        document.getElementById('Fid').value = '502';
+        document.getElementById('ClaimID').value = 'CLM99431';
+        document.getElementById('ClaimDt').value = '2023-09-01';
+        document.getElementById('Provider').value = 'PRV51001';
+        document.getElementById('Sum_Insured').value = '25000';
+        document.getElementById('InscClaimAmtReimbursed').value = '24500';
+        document.getElementById('AttendingPhysician').value = 'PHY330744';
+        document.getElementById('ClmDiagnosisCode_1').value = '78605';
+        document.getElementById('Claimed_Amount').value = '24500';
+        document.getElementById('Glucose').value = '185';
+        document.getElementById('BloodPressure').value = '95';
+        document.getElementById('SkinThickness').value = '45';
+        document.getElementById('Insulin').value = '240';
+        document.getElementById('BMI').value = '38.2';
+        document.getElementById('DiabetesPedigreeFunction').value = '0.875';
+        document.getElementById('Age').value = '58';
+    }
+}
+</script>
+{% endblock %}

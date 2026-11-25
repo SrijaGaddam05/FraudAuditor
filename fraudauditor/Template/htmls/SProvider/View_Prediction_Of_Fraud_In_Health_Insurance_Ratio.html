@@ -1,0 +1,141 @@
+{% extends 'SProvider/Header.html' %}
+{% load static %}
+
+{% block title %}Fraud Prediction Ratios | FraudAuditor Admin{% endblock %}
+
+{% block researchblock %}
+<div class="container-fluid p-0">
+    <!-- Header -->
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+        <div>
+            <h3 class="fw-bold mb-1">Health Insurance Fraud Distribution Ratios</h3>
+            <p class="text-muted small mb-0">Aggregate ratio breakdown of fraudulent vs. verified legitimate claims across the health insurance portfolio</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'charts' 'pie' %}" class="btn-saas-secondary btn-sm text-decoration-none">
+                <i class="fa-solid fa-chart-pie me-1"></i> View Pie Chart
+            </a>
+            <a href="{% url 'charts' 'line' %}" class="btn-saas-outline btn-sm text-decoration-none">
+                <i class="fa-solid fa-chart-line me-1"></i> View Line Chart
+            </a>
+        </div>
+    </div>
+
+    <!-- Ratio Summary Cards -->
+    <div class="row g-4 mb-4">
+        {% for object in objs %}
+        <div class="col-md-6">
+            {% if object.names == "Fraud Found" %}
+            <div class="saas-card p-4 border-danger border-opacity-25" style="border-left: 6px solid var(--danger) !important; background: linear-gradient(135deg, #FEF2F2 0%, #FFFFFF 100%);">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <span class="badge-fraud mb-1"><i class="fa-solid fa-triangle-exclamation"></i> Suspicious / Fraudulent</span>
+                        <h4 class="fw-bold text-danger mb-0">{{ object.names }}</h4>
+                    </div>
+                    <div class="stat-icon red" style="width: 48px; height: 48px;">
+                        <i class="fa-solid fa-radiation"></i>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-baseline gap-2 mb-2">
+                    <h2 class="display-5 fw-bold text-danger mb-0">{{ object.ratio|floatformat:2 }}%</h2>
+                    <span class="text-muted small">of total audited claims</span>
+                </div>
+
+                <div class="progress mb-3" style="height: 10px; background: rgba(239, 68, 68, 0.15);">
+                    <div class="progress-bar bg-danger" style="width: {{ object.ratio }}%;"></div>
+                </div>
+
+                <p class="text-muted small mb-0">High-risk claims exhibiting billing mismatch or co-visit collusive fraud markers.</p>
+            </div>
+            {% else %}
+            <div class="saas-card p-4 border-success border-opacity-25" style="border-left: 6px solid var(--success) !important; background: linear-gradient(135deg, #F0FDF4 0%, #FFFFFF 100%);">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <span class="badge-safe mb-1"><i class="fa-solid fa-shield-check"></i> Verified Genuine</span>
+                        <h4 class="fw-bold text-success mb-0">{{ object.names }}</h4>
+                    </div>
+                    <div class="stat-icon green" style="width: 48px; height: 48px;">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-baseline gap-2 mb-2">
+                    <h2 class="display-5 fw-bold text-success mb-0">{{ object.ratio|floatformat:2 }}%</h2>
+                    <span class="text-muted small">of total audited claims</span>
+                </div>
+
+                <div class="progress mb-3" style="height: 10px; background: rgba(22, 163, 74, 0.15);">
+                    <div class="progress-bar bg-success" style="width: {{ object.ratio }}%;"></div>
+                </div>
+
+                <p class="text-muted small mb-0">Verified medical treatments consistent with diagnosis codes and standard patient vitals.</p>
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Ratio Breakdown Table -->
+    <div class="saas-card">
+        <div class="saas-card-header">
+            <h5 class="fw-bold mb-0" style="font-size: 1.05rem;">
+                <i class="fa-solid fa-chart-column text-secondary me-2"></i>Calculated Distribution Metrics
+            </h5>
+            <span class="badge bg-light text-muted border small">Backend Computed</span>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table-saas">
+                <thead>
+                    <tr>
+                        <th>Classification Outcome</th>
+                        <th>Distribution Ratio</th>
+                        <th>Progress Indicator</th>
+                        <th class="text-end">Audit Recommendation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for object in objs %}
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                {% if object.names == "Fraud Found" %}
+                                <i class="fa-solid fa-triangle-exclamation text-danger"></i>
+                                <span class="fw-bold text-danger">{{ object.names }}</span>
+                                {% else %}
+                                <i class="fa-solid fa-circle-check text-success"></i>
+                                <span class="fw-bold text-success">{{ object.names }}</span>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td>
+                            <span class="fw-bold font-monospace fs-6">{{ object.ratio|floatformat:2 }}%</span>
+                        </td>
+                        <td style="width: 35%;">
+                            <div class="progress" style="height: 8px; border-radius: 4px; background: #E2E8F0;">
+                                <div class="progress-bar {% if object.names == 'Fraud Found' %}bg-danger{% else %}bg-success{% endif %}" style="width: {{ object.ratio }}%;"></div>
+                            </div>
+                        </td>
+                        <td class="text-end">
+                            {% if object.names == "Fraud Found" %}
+                            <span class="badge-fraud">Immediate Investigation</span>
+                            {% else %}
+                            <span class="badge-safe">Auto-Clear for Payout</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center py-5 text-muted">
+                            <i class="fa-solid fa-chart-pie fs-3 mb-2 d-block text-secondary"></i>
+                            No ratio records found.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

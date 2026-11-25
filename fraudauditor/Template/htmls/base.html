@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}FraudAuditor | Health Insurance Fraud Analytics{% endblock %}</title>
+
+    <!-- Google Fonts: Inter & Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome 6.5 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Custom Enterprise SaaS Design System CSS -->
+    <style>
+        :root {
+            --primary: #B91C1C;
+            --primary-hover: #991B1B;
+            --secondary: #DC2626;
+            --secondary-hover: #B91C1C;
+            --accent: #EF4444;
+            --accent-hover: #DC2626;
+            --bg-main: #FAFAFA;
+            --card-bg: #FFFFFF;
+            --text-main: #111827;
+            --text-muted: #6B7280;
+            --danger: #DC2626;
+            --danger-bg: #FEE2E2;
+            --success: #16A34A;
+            --success-bg: #DCFCE7;
+            --warning: #F59E0B;
+            --warning-bg: #FEF3C7;
+            --border-color: #E5E7EB;
+            --sidebar-width: 270px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.5;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        a {
+            color: var(--secondary);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        a:hover {
+            color: var(--secondary-hover);
+        }
+
+        /* SaaS Card styling */
+        .saas-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            overflow: hidden;
+        }
+
+        .saas-card:hover {
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07);
+        }
+
+        .saas-card-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #FFFFFF;
+        }
+
+        .saas-card-body {
+            padding: 1.5rem;
+        }
+
+        /* Stat widget */
+        .stat-widget {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .stat-icon.blue { background: #FEF2F2; color: var(--primary); }
+        .stat-icon.green { background: #DCFCE7; color: var(--success); }
+        .stat-icon.red { background: #FEE2E2; color: var(--danger); }
+        .stat-icon.teal { background: #FEF2F2; color: var(--secondary); }
+        .stat-icon.navy { background: #FEE2E2; color: var(--primary); }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .stat-label {
+            font-size: 0.825rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin: 0;
+            font-weight: 500;
+        }
+
+        /* Form elements */
+        .form-label {
+            font-weight: 500;
+            color: #334155;
+            font-size: 0.875rem;
+            margin-bottom: 0.4rem;
+        }
+
+        /* Glassmorphism Auth Card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            border-radius: 16px;
+            box-shadow: 0 20px 45px rgba(127, 29, 29, 0.22);
+        }
+
+        .auth-bg-overlay {
+            min-height: calc(100vh - 72px);
+            background: linear-gradient(135deg, #7F1D1D 0%, #B91C1C 55%, #DC2626 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 1rem;
+        }
+
+        .form-control, .form-select {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.65rem 0.9rem;
+            font-size: 0.925rem;
+            color: var(--text-main);
+            background-color: #FFFFFF;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.15);
+            outline: none;
+        }
+
+        /* Buttons */
+        .btn-saas-primary {
+            background-color: var(--primary);
+            color: #FFFFFF;
+            border: 1px solid var(--primary);
+            font-weight: 500;
+            border-radius: 8px;
+            padding: 0.65rem 1.4rem;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-saas-primary:hover {
+            background-color: var(--primary-hover);
+            color: #FFFFFF;
+            border-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-saas-secondary {
+            background-color: var(--secondary);
+            color: #FFFFFF;
+            border: 1px solid var(--secondary);
+            font-weight: 500;
+            border-radius: 8px;
+            padding: 0.65rem 1.4rem;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-saas-secondary:hover {
+            background-color: var(--secondary-hover);
+            color: #FFFFFF;
+            border-color: var(--secondary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-saas-outline {
+            background-color: transparent;
+            color: var(--primary);
+            border: 1px solid var(--border-color);
+            font-weight: 500;
+            border-radius: 8px;
+            padding: 0.65rem 1.4rem;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-saas-outline:hover {
+            background-color: #F1F5F9;
+            color: var(--primary);
+            border-color: #CBD5E1;
+        }
+
+        /* Modern Table */
+        .table-saas-container {
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            overflow: hidden;
+            background: #FFFFFF;
+        }
+
+        .table-saas {
+            width: 100%;
+            margin-bottom: 0;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .table-saas th {
+            background-color: #F8FAFC;
+            color: #475569;
+            font-size: 0.775rem;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            font-weight: 600;
+            padding: 0.9rem 1.1rem;
+            border-bottom: 1px solid var(--border-color);
+            white-space: nowrap;
+        }
+
+        .table-saas td {
+            padding: 0.85rem 1.1rem;
+            font-size: 0.875rem;
+            color: #334155;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+
+        .table-saas tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .table-saas tbody tr:hover {
+            background-color: #F8FAFC;
+        }
+
+        /* Status Badges */
+        .badge-fraud {
+            background-color: var(--danger-bg);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            padding: 0.35rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.775rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .badge-safe {
+            background-color: var(--success-bg);
+            color: var(--success);
+            border: 1px solid rgba(22, 163, 74, 0.25);
+            padding: 0.35rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.775rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .badge-neutral {
+            background-color: #F1F5F9;
+            color: #475569;
+            border: 1px solid var(--border-color);
+            padding: 0.35rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.775rem;
+            font-weight: 600;
+        }
+
+        /* App Layout Shell (Sidebar + Main) */
+        .app-shell {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .app-sidebar {
+            width: var(--sidebar-width);
+            background: #FFFFFF;
+            color: var(--text-main);
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .sidebar-brand {
+            padding: 1.5rem 1.25rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .brand-logo-icon {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFFFFF;
+            font-size: 1.15rem;
+        }
+
+        .brand-text-name {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #111827;
+            letter-spacing: -0.3px;
+            margin: 0;
+        }
+
+        .brand-sub {
+            font-size: 0.7rem;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            font-weight: 600;
+            display: block;
+        }
+
+        .sidebar-nav {
+            padding: 1.25rem 0.75rem;
+            flex-grow: 1;
+        }
+
+        .sidebar-section-title {
+            font-size: 0.675rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #9CA3AF;
+            font-weight: 600;
+            padding: 0.75rem 0.75rem 0.35rem;
+            margin-top: 0.5rem;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            padding: 0.7rem 0.85rem;
+            border-radius: 8px;
+            color: #4B5563;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            transition: all 0.15s ease;
+            text-decoration: none;
+        }
+
+        .sidebar-link i {
+            font-size: 1rem;
+            width: 20px;
+            text-align: center;
+            color: #6B7280;
+            transition: color 0.15s ease;
+        }
+
+        .sidebar-link:hover {
+            color: var(--primary);
+            background: #FEF2F2;
+        }
+
+        .sidebar-link:hover i {
+            color: var(--primary);
+        }
+
+        .sidebar-link.active {
+            color: var(--primary);
+            background: #FEF2F2;
+            border-left: 3px solid var(--primary);
+            font-weight: 600;
+        }
+
+        .sidebar-link.active i {
+            color: var(--primary);
+        }
+
+        .sidebar-footer {
+            padding: 1rem;
+            border-top: 1px solid var(--border-color);
+            background: #FAFAFA;
+        }
+
+        .app-main {
+            margin-left: var(--sidebar-width);
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .app-topbar {
+            height: 68px;
+            background: #FFFFFF;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 900;
+        }
+
+        .app-content {
+            padding: 2rem;
+            flex-grow: 1;
+        }
+
+        /* Responsive breakpoints */
+        @media (max-width: 992px) {
+            .app-sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            .app-sidebar.show {
+                transform: translateX(0);
+            }
+            .app-main {
+                margin-left: 0;
+            }
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    {% block root_content %}{% endblock %}
+
+    <!-- Bootstrap 5.3 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
+

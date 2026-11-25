@@ -1,0 +1,143 @@
+{% extends 'SProvider/Header.html' %}
+{% load static %}
+
+{% block title %}Registered Remote Users | FraudAuditor Admin{% endblock %}
+
+{% block researchblock %}
+<div class="container-fluid p-0">
+    <!-- Header -->
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+        <div>
+            <h3 class="fw-bold mb-1">Registered Users Directory</h3>
+            <p class="text-muted small mb-0">Overview of all policyholders and client accounts registered within FraudAuditor</p>
+        </div>
+        <div class="d-flex gap-2">
+            <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 px-3 py-2 small">
+                <i class="fa-solid fa-users me-1"></i> Policyholder Accounts
+            </span>
+        </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="row g-3 mb-4">
+        <div class="col-sm-6 col-lg-4">
+            <div class="stat-widget">
+                <div class="stat-icon blue">
+                    <i class="fa-solid fa-users-gear"></i>
+                </div>
+                <div>
+                    <h4 class="stat-value">{{ objects|length }}</h4>
+                    <span class="stat-label">Total Registered Users</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-4">
+            <div class="stat-widget">
+                <div class="stat-icon green">
+                    <i class="fa-solid fa-user-check"></i>
+                </div>
+                <div>
+                    <h4 class="stat-value">{{ objects|length }}</h4>
+                    <span class="stat-label">Active Audit Profiles</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-4">
+            <div class="stat-widget">
+                <div class="stat-icon teal">
+                    <i class="fa-solid fa-database"></i>
+                </div>
+                <div>
+                    <h4 class="stat-value">MySQL</h4>
+                    <span class="stat-label">Storage Backend</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Users Table Card -->
+    <div class="saas-card">
+        <div class="saas-card-header flex-wrap gap-2">
+            <h5 class="fw-bold mb-0" style="font-size: 1.05rem;">
+                <i class="fa-solid fa-id-card-clip text-secondary me-2"></i>User Profiles Ledger
+            </h5>
+            <div class="d-flex align-items-center gap-2">
+                <div class="input-group input-group-sm" style="max-width: 260px;">
+                    <span class="input-group-text bg-white border-end-0"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+                    <input type="text" id="userTableSearch" class="form-control border-start-0" placeholder="Filter users..." onkeyup="filterUserTable()">
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table-saas" id="usersTable">
+                <thead>
+                    <tr>
+                        <th>User Name</th>
+                        <th>Email Address</th>
+                        <th>Gender</th>
+                        <th>Mobile Number</th>
+                        <th>Street Address</th>
+                        <th>City</th>
+                        <th>State</th>
+                        <th>Country</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for o in objects %}
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold small" style="width: 32px; height: 32px; background: var(--secondary); font-size: 0.8rem;">
+                                    {{ o.username|make_list|first|upper }}
+                                </div>
+                                <span class="fw-bold text-dark">{{ o.username }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="text-secondary"><i class="fa-regular fa-envelope me-1 text-muted"></i>{{ o.email }}</span>
+                        </td>
+                        <td>
+                            {% if o.gender == "Male" %}
+                            <span class="badge bg-primary bg-opacity-10 text-primary px-2 py-1 small"><i class="fa-solid fa-mars me-1"></i>Male</span>
+                            {% elif o.gender == "Female" %}
+                            <span class="badge bg-danger bg-opacity-10 text-danger px-2 py-1 small"><i class="fa-solid fa-venus me-1"></i>Female</span>
+                            {% else %}
+                            <span class="badge bg-light text-muted border px-2 py-1 small">{{ o.gender }}</span>
+                            {% endif %}
+                        </td>
+                        <td><span class="font-monospace text-dark">{{ o.phoneno }}</span></td>
+                        <td><span class="text-muted small text-truncate d-inline-block" style="max-width: 180px;">{{ o.address|default:"-" }}</span></td>
+                        <td><span class="text-dark">{{ o.city|default:"-" }}</span></td>
+                        <td><span class="text-dark">{{ o.state|default:"-" }}</span></td>
+                        <td><span class="badge bg-light text-dark border">{{ o.country|default:"-" }}</span></td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center py-5 text-muted">
+                            <i class="fa-solid fa-user-slash fs-3 mb-2 d-block text-secondary"></i>
+                            No registered users found in database.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+function filterUserTable() {
+    const filter = document.getElementById("userTableSearch").value.toUpperCase();
+    const rows = document.getElementById("usersTable").getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+    for (let i = 0; i < rows.length; i++) {
+        let text = rows[i].textContent || rows[i].innerText;
+        if (text.toUpperCase().indexOf(filter) > -1) {
+            rows[i].style.display = "";
+        } else {
+            rows[i].style.display = "none";
+        }
+    }
+}
+</script>
+{% endblock %}

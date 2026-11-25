@@ -1,0 +1,66 @@
+{% extends 'public_base.html' %}
+{% load static %}
+
+{% block title %}Service Provider Login | FraudAuditor{% endblock %}
+
+{% block public_content %}
+<div class="auth-bg-overlay" style="background: linear-gradient(135deg, #FFFFFF 0%, #FFF5F5 55%, #FEE2E2 100%);">
+    <div class="container-xl">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-5">
+                <div class="text-center mb-4">
+                    <div class="d-inline-flex align-items-center justify-content-center brand-logo-icon mb-3 shadow-lg" style="width: 52px; height: 52px; font-size: 1.6rem; background: linear-gradient(135deg, var(--primary), var(--secondary));">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <h2 class="fw-bold mb-1" style="color: #111827;">Service Provider Portal</h2>
+                    <p class="text-muted small">Claims Auditor &amp; Administrative Access</p>
+                </div>
+
+                <!-- Credentials helper badge -->
+                <div class="alert border-0 shadow-sm d-flex align-items-center gap-2 py-2 px-3 mb-3 rounded-3 small" style="background: rgba(254, 242, 242, 0.96); backdrop-filter: blur(8px); color: #7F1D1D;">
+                    <i class="fa-solid fa-circle-info" style="color: var(--primary);"></i>
+                    <div>
+                        <strong>Default Admin Credentials:</strong> Username: <code class="fw-bold" style="color: var(--primary);">Admin</code> | Password: <code class="fw-bold" style="color: var(--primary);">Admin</code>
+                    </div>
+                </div>
+
+                <!-- Translucent Glassmorphism Card -->
+                <div class="glass-card p-4 p-sm-5">
+                    <form method="POST" role="form">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label class="form-label" for="username">
+                                <i class="fa-solid fa-user-gear me-1 text-muted"></i> Administrator Username
+                            </label>
+                            <input type="text" id="username" name="username" class="form-control" value="Admin" placeholder="Enter admin username" required autofocus>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label" for="password">
+                                <i class="fa-solid fa-lock me-1 text-muted"></i> Security Password
+                            </label>
+                            <input type="password" id="password" name="password" class="form-control" value="Admin" placeholder="Enter admin password" required>
+                        </div>
+
+                        <button type="submit" name="submit1" class="btn-saas-secondary w-100 py-2.5 mb-3 shadow-sm">
+                            <i class="fa-solid fa-right-to-bracket me-1"></i> Access Auditor Dashboard
+                        </button>
+
+                        <div class="text-center pt-3 border-top border-light">
+                            <span class="text-muted small">Need policyholder claim prediction?</span>
+                            <a href="{% url 'login' %}" class="fw-semibold ms-1 small">Go to User Portal</a>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="text-center mt-4">
+                    <span class="badge bg-dark bg-opacity-50 text-white border border-light border-opacity-25 px-3 py-2 rounded-pill small shadow-sm">
+                        <i class="fa-solid fa-lock fa-xs me-1 text-accent"></i> 256-Bit SSL Encrypted Admin Gateway
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

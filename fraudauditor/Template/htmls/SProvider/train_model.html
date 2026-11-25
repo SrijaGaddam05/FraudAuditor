@@ -1,0 +1,124 @@
+{% extends 'SProvider/Header.html' %}
+{% load static %}
+
+{% block title %}Train Machine Learning Models | FraudAuditor Admin{% endblock %}
+
+{% block researchblock %}
+<div class="container-fluid p-0">
+    <!-- Page Header -->
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+        <div>
+            <h3 class="fw-bold mb-1">Machine Learning Model Training</h3>
+            <p class="text-muted small mb-0">Evaluate and benchmark classification algorithms against the health insurance fraud dataset</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'likeschart' 'bar' %}" class="btn-saas-secondary btn-sm text-decoration-none">
+                <i class="fa-solid fa-chart-column me-1"></i> View Bar Chart
+            </a>
+            <a href="{% url 'charts1' 'line' %}" class="btn-saas-outline btn-sm text-decoration-none">
+                <i class="fa-solid fa-chart-line me-1"></i> View Line Chart
+            </a>
+            <a href="{% url 'train_model' %}" class="btn btn-sm btn-outline-primary" title="Re-run training pipeline">
+                <i class="fa-solid fa-rotate me-1"></i> Re-Train Pipeline
+            </a>
+        </div>
+    </div>
+
+    <!-- Algorithm Information Banner -->
+    <div class="saas-card mb-4 p-4" style="background: linear-gradient(135deg, #991B1B 0%, #DC2626 100%); color: #FFFFFF;">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-8">
+                <span class="badge px-2.5 py-1 small mb-2" style="background: rgba(255,255,255,0.2); color: #FFFFFF; border: 1px solid rgba(255,255,255,0.35);">
+                    IEEE Transactions Multi-Model Pipeline
+                </span>
+                <h4 class="text-white fw-bold mb-2">Health Insurance Claims Dataset Evaluator</h4>
+                <p class="text-white-50 small mb-0" style="line-height: 1.6; max-width: 650px;">
+                    Training is performed across an 80/20 train-test split using scikit-learn. Each classifier is evaluated on test accuracy, classification metrics, and confusion matrix before being registered into the ensemble voting engine.
+                </p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <div class="d-inline-flex flex-column gap-2 text-start p-3 rounded-3" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);">
+                    <div class="small text-white-50"><i class="fa-solid fa-database text-accent me-1.5"></i> Source: <code>Datasets.csv</code></div>
+                    <div class="small text-white-50"><i class="fa-solid fa-split text-accent me-1.5"></i> Test Ratio: <code>20% Holdout</code></div>
+                    <div class="small text-white-50"><i class="fa-solid fa-bolt text-accent me-1.5"></i> Status: <span class="text-success fw-bold">Models Trained</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Accuracy Results Table Card -->
+    <div class="saas-card">
+        <div class="saas-card-header">
+            <h5 class="fw-bold mb-0" style="font-size: 1.05rem;">
+                <i class="fa-solid fa-award text-secondary me-2"></i>Trained Classifier Accuracy Benchmarks
+            </h5>
+            <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 small">
+                Active Benchmark Set
+            </span>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table-saas">
+                <thead>
+                    <tr>
+                        <th style="width: 35%;">Classification Model</th>
+                        <th style="width: 25%;">Model Family</th>
+                        <th style="width: 25%;">Accuracy Rate</th>
+                        <th style="width: 15%;" class="text-end">Performance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for object in objs %}
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="stat-icon blue" style="width: 36px; height: 36px; font-size: 1rem;">
+                                    <i class="fa-solid fa-brain"></i>
+                                </div>
+                                <div>
+                                    <div class="fw-bold text-dark fs-6">{{ object.names }}</div>
+                                    <div class="text-muted" style="font-size: 0.75rem;">Supervised Classification</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            {% if "Neural" in object.names %}
+                            <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 px-2.5 py-1">Deep Learning / MLP</span>
+                            {% elif "SVM" in object.names %}
+                            <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 px-2.5 py-1">Kernel LinearSVC</span>
+                            {% elif "Logistic" in object.names %}
+                            <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 px-2.5 py-1">Generalized Linear</span>
+                            {% elif "Gradient" in object.names %}
+                            <span class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 px-2.5 py-1">Tree Ensemble</span>
+                            {% else %}
+                            <span class="badge bg-light text-muted border px-2.5 py-1">Probabilistic</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="progress flex-grow-1" style="height: 8px; border-radius: 4px; background: #E2E8F0;">
+                                    <div class="progress-bar bg-success" style="width: {{ object.ratio }}%;"></div>
+                                </div>
+                                <span class="fw-bold font-monospace text-dark" style="font-size: 0.95rem; min-width: 60px;">{{ object.ratio|floatformat:2 }}%</span>
+                            </div>
+                        </td>
+                        <td class="text-end">
+                            <span class="badge-safe">
+                                <i class="fa-solid fa-circle-check"></i> High Accuracy
+                            </span>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center py-5 text-muted">
+                            <i class="fa-solid fa-microchip fs-3 mb-2 d-block text-secondary"></i>
+                            No trained model benchmarks recorded. Click <a href="{% url 'train_model' %}" class="fw-bold">Train Models</a> to execute.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

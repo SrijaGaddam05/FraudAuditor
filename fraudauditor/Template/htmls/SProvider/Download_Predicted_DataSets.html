@@ -1,0 +1,75 @@
+{% extends 'SProvider/Header.html' %}
+{% load static %}
+
+{% block title %}Export Predicted Datasets | FraudAuditor Admin{% endblock %}
+
+{% block researchblock %}
+<div class="container-fluid p-0">
+    <!-- Header -->
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+        <div>
+            <h3 class="fw-bold mb-1">Export Audited Claims Datasets</h3>
+            <p class="text-muted small mb-0">Generate and download official health insurance audit records in Excel (.xls) format</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'View_Prediction_Of_Fraud_In_Health_Insurance' %}" class="btn-saas-outline btn-sm text-decoration-none">
+                <i class="fa-solid fa-arrow-left me-1"></i> Back to Claims Ledger
+            </a>
+        </div>
+    </div>
+
+    <!-- Export Action Card -->
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="saas-card text-center p-5 mb-4">
+                <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-3" style="width: 72px; height: 72px; background: #DCFCE7; color: #16A34A; font-size: 2rem;">
+                    <i class="fa-solid fa-file-excel"></i>
+                </div>
+
+                <h4 class="fw-bold mb-2">Export Health Insurance Claims Ledger</h4>
+                <p class="text-muted small mb-4" style="max-width: 500px; margin: 0 auto; line-height: 1.6;">
+                    Export all claims, clinical diagnostic vitals, physician IDs, and corresponding AI prediction outcomes directly into a structured Microsoft Excel spreadsheet.
+                </p>
+
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="{% url 'Download_Predicted_DataSets' %}" class="btn-saas-secondary px-4 py-2.5 shadow-sm text-decoration-none">
+                        <i class="fa-solid fa-download me-2"></i> Download Predicted_Datasets.xls
+                    </a>
+                </div>
+            </div>
+
+            <!-- Export Schema Reference Card -->
+            <div class="saas-card">
+                <div class="saas-card-header">
+                    <h6 class="fw-bold mb-0">
+                        <i class="fa-solid fa-list-check text-secondary me-2"></i>Exported Dataset Field Schema
+                    </h6>
+                    <span class="badge bg-light text-muted border small">17 Columns</span>
+                </div>
+
+                <div class="saas-card-body p-4">
+                    <div class="row g-2 small text-muted">
+                        <div class="col-sm-6 col-md-4"><code>Fid</code> - Feature Record ID</div>
+                        <div class="col-sm-6 col-md-4"><code>ClaimID</code> - Unique Claim ID</div>
+                        <div class="col-sm-6 col-md-4"><code>ClaimDt</code> - Claim Date</div>
+                        <div class="col-sm-6 col-md-4"><code>Provider</code> - Hospital/Provider ID</div>
+                        <div class="col-sm-6 col-md-4"><code>Sun_Insured</code> - Total Insured Sum</div>
+                        <div class="col-sm-6 col-md-4"><code>InscClaimAmtReimbursed</code> - Reimbursed</div>
+                        <div class="col-sm-6 col-md-4"><code>AttendingPhysician</code> - Doctor Code</div>
+                        <div class="col-sm-6 col-md-4"><code>ClmDiagnosisCode_1</code> - ICD Code</div>
+                        <div class="col-sm-6 col-md-4"><code>Claimed_Amount</code> - Claimed Total</div>
+                        <div class="col-sm-6 col-md-4"><code>Glucose</code> - Glucose Reading</div>
+                        <div class="col-sm-6 col-md-4"><code>BloodPressure</code> - Systolic BP</div>
+                        <div class="col-sm-6 col-md-4"><code>SkinThickness</code> - Skin Thickness</div>
+                        <div class="col-sm-6 col-md-4"><code>Insulin</code> - Insulin Level</div>
+                        <div class="col-sm-6 col-md-4"><code>BMI</code> - Body Mass Index</div>
+                        <div class="col-sm-6 col-md-4"><code>DiabetesPedigree</code> - DPF Index</div>
+                        <div class="col-sm-6 col-md-4"><code>Age</code> - Patient Age</div>
+                        <div class="col-sm-6 col-md-4"><strong class="text-dark"><code>Prediction</code> - Fraud / No Fraud</strong></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
